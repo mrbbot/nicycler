@@ -155,6 +155,12 @@ NicyclerSwipe<Text> completeSwipe = new NicyclerSwipe<Text>(R.drawable.ic_check,
 };
 ```
 
+Once we've created the `NicyclerSwipe` object, we can pass it to the `init` function as we did for the adapter.
+```java
+view.init(adapter, completeSwipe, null);
+```
+The 2nd parameter is the left swipe and the 3rd is the right swipe. Either of these can be `null` if that swipe is not required.
+
 ### Filtering
 Let's imagine we have an `EditText` with an id of `filter_text`:
 ```java
