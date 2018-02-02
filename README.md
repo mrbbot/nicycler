@@ -1,14 +1,6 @@
 # Nicycler
 Nicycler is a nicer version of Android's `RecyclerView`.
 
-## Installation
-Add the library as a Gradle dependency to your module-level `build.gradle`.
-```gradle
-dependencies {
-    compile 'com.mrbbot:nicycler:1.0'
-}
-```
-
 ## Usage
 Nicycler works by specifying the data type to contain all the data for a record and the view type to display the record in. For the following example, we'll define a data class called `Text` with a String field called `message` and use a `TextView` to display the text.
 ```java
