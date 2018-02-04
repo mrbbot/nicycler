@@ -31,9 +31,12 @@ class NicyclerRecyclerAdapter<D, V extends View> extends RecyclerView.Adapter<Ni
     }
 
     ArrayList<D> getFilteredDataset() {
-        if(filter == null) return dataset;
         ArrayList<D> filteredDataset = new ArrayList<>();
-        for(D d : dataset) if(filter.accept(d)) filteredDataset.add(d);
+        if(filter == null) {
+            filteredDataset.addAll(dataset);
+        } else {
+            for (D d : dataset) if (filter.accept(d)) filteredDataset.add(d);
+        }
         return filteredDataset;
     }
 
