@@ -5,7 +5,7 @@ Nicycler is a nicer version of Android's `RecyclerView`.
 Add the library as a Gradle dependency to your app-level `build.gradle`.
 ```gradle
 dependencies {
-    compile 'com.mrbbot:nicycler:1.0'
+    compile 'com.mrbbot:nicycler:1.0.1'
 }
 ```
 
