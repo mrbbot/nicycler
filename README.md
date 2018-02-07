@@ -15,7 +15,7 @@ static class Text implements Serializable {
 > Note: this class needs to implement `Serializable` and be in its own file or a static class in order for it to be properly stored when the Activity is paused.
 
 ### View
-Then, add a `NicyclerView` to your layout file:
+Add a `NicyclerView` to your layout file:
 ```xml
 <com.mrbbot.nicycler.NicyclerView
     android:id="@+id/nicycler"
@@ -131,7 +131,7 @@ NicyclerSwipe<Text> completeSwipe = new NicyclerSwipe<Text>(R.drawable.ic_check,
 	...
 }
 ```
-There is also a `canSwipe` method the can be overridden that determines whether an item can be swiped.
+There is also a `canSwipe` method that can be overridden that determines whether an item can be swiped.
 ```java
 NicyclerSwipe<Text> completeSwipe = new NicyclerSwipe<Text>(R.drawable.ic_check, "#4CAF50") {
     @Override
