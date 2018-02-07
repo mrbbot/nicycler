@@ -187,7 +187,7 @@ filterText.addTextChangedListener(new TextWatcher() {
 ```
 The filter only affects the displayed results, and not the actual dataset.
 
-#### Sorting
+### Sorting
 In a similar way, we can also sort the dataset. If we wanted to sort the data alphabetically, we can use:
 
 ```java
