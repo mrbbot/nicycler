@@ -15,6 +15,7 @@ import android.view.View;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * A nicer version of the {@code RecyclerView}
@@ -105,6 +106,26 @@ public class NicyclerView<D extends Serializable, V extends View> extends Recycl
      */
     public void filter(@Nullable Filter<D> filter) {
         adapter.filter = filter;
+        adapter.invalidateFilteredSortedCache();
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Sorts the dataset with the given comparator
+     * @param sorter comparator to compare items
+     */
+    public void sort(@Nullable Comparator<D> sorter) {
+        adapter.sorter = sorter;
+        adapter.invalidateFilteredSortedCache();
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Clears the dataset
+     */
+    public final void clear() {
+        adapter.dataset.clear();
+        adapter.invalidateFilteredSortedCache();
         adapter.notifyDataSetChanged();
     }
 
@@ -116,6 +137,7 @@ public class NicyclerView<D extends Serializable, V extends View> extends Recycl
     public final void set(D... items) {
         adapter.dataset.clear();
         Collections.addAll(adapter.dataset, items);
+        adapter.invalidateFilteredSortedCache();
         adapter.notifyDataSetChanged();
     }
 
@@ -126,6 +148,7 @@ public class NicyclerView<D extends Serializable, V extends View> extends Recycl
     @SafeVarargs
     public final void add(D... items) {
         Collections.addAll(adapter.dataset, items);
+        adapter.invalidateFilteredSortedCache();
         adapter.notifyItemRangeInserted(adapter.dataset.size() - items.length, items.length);
     }
 
@@ -152,9 +175,10 @@ public class NicyclerView<D extends Serializable, V extends View> extends Recycl
             }
         }
 
-        ArrayList<D> filteredDataset = adapter.getFilteredDataset();
+        ArrayList<D> filteredDataset = adapter.getFilteredSortedDataset();
         boolean updatingNeeded = containsAny(filteredDataset, toRemove);
         adapter.dataset.removeAll(toRemove);
+        adapter.invalidateFilteredSortedCache();
         if(updatingNeeded) {
             if (toRemove.size() > 1) {
                 adapter.notifyDataSetChanged();
@@ -177,7 +201,8 @@ public class NicyclerView<D extends Serializable, V extends View> extends Recycl
             }
         }
 
-        ArrayList<D> filteredDataset = adapter.getFilteredDataset();
+        adapter.invalidateFilteredSortedCache();
+        ArrayList<D> filteredDataset = adapter.getFilteredSortedDataset();
         if(containsAny(filteredDataset, updated)) {
             if (updated.size() > 1) {
                 adapter.notifyDataSetChanged();
@@ -193,7 +218,8 @@ public class NicyclerView<D extends Serializable, V extends View> extends Recycl
      * @param d item to update
      */
     private void update(D d) {
-        adapter.notifyItemChanged(adapter.getFilteredDataset().indexOf(d));
+        adapter.invalidateFilteredSortedCache();
+        adapter.notifyItemChanged(adapter.getFilteredSortedDataset().indexOf(d));
     }
 
     /**
@@ -230,6 +256,7 @@ public class NicyclerView<D extends Serializable, V extends View> extends Recycl
     @SuppressWarnings("unchecked")
     public void restore(Bundle savedInstanceState, String id) {
         if(savedInstanceState.containsKey(STATE_PREFIX + id)) {
+            adapter.invalidateFilteredSortedCache();
             adapter.dataset = (ArrayList<D>) savedInstanceState.getSerializable(STATE_PREFIX + id);
         }
     }

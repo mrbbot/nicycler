@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * The actual {@code RecyclerView.Adapter} of the nicycler
@@ -17,6 +19,7 @@ class NicyclerRecyclerAdapter<D, V extends View> extends RecyclerView.Adapter<Ni
     private NicyclerListener<D, V> listener;
     @Nullable
     Filter<D> filter;
+    Comparator<D> sorter;
 
     NicyclerRecyclerAdapter(NicyclerListener<D, V> listener) {
         this.dataset = new ArrayList<>();
@@ -30,14 +33,27 @@ class NicyclerRecyclerAdapter<D, V extends View> extends RecyclerView.Adapter<Ni
         }
     }
 
-    ArrayList<D> getFilteredDataset() {
-        ArrayList<D> filteredDataset = new ArrayList<>();
+    private ArrayList<D> filteredSortedCache;
+    ArrayList<D> getFilteredSortedDataset() {
+        if(filteredSortedCache != null) return filteredSortedCache;
+        ArrayList<D> filteredSortedDataset = new ArrayList<>();
+
         if(filter == null) {
-            filteredDataset.addAll(dataset);
+            filteredSortedDataset.addAll(dataset);
         } else {
-            for (D d : dataset) if (filter.accept(d)) filteredDataset.add(d);
+            for (D d : dataset) if (filter.accept(d)) filteredSortedDataset.add(d);
         }
-        return filteredDataset;
+
+        if(sorter != null) {
+            Collections.sort(filteredSortedDataset, sorter);
+        }
+
+        filteredSortedCache = filteredSortedDataset;
+        return filteredSortedDataset;
+    }
+
+    void invalidateFilteredSortedCache() {
+        filteredSortedCache = null;
     }
 
     @Override
@@ -49,7 +65,7 @@ class NicyclerRecyclerAdapter<D, V extends View> extends RecyclerView.Adapter<Ni
 
     @Override
     public void onBindViewHolder(NicyclerRecyclerAdapter.VH holder, int position) {
-        ArrayList<D> filteredDataset = getFilteredDataset();
+        ArrayList<D> filteredDataset = getFilteredSortedDataset();
         holder.d = filteredDataset.get(position);
         //noinspection unchecked
         listener.onBind((V) holder.itemView, filteredDataset.get(position));
@@ -57,6 +73,6 @@ class NicyclerRecyclerAdapter<D, V extends View> extends RecyclerView.Adapter<Ni
 
     @Override
     public int getItemCount() {
-        return getFilteredDataset().size();
+        return getFilteredSortedDataset().size();
     }
 }
