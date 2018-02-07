@@ -1,6 +1,14 @@
 # Nicycler
 Nicycler is a nicer version of Android's `RecyclerView`.
 
+## Installation
+Add the library as a Gradle dependency to your app-level `build.gradle`.
+```gradle
+dependencies {
+    compile 'com.mrbbot:nicycler:1.0'
+}
+```
+
 ## Usage
 Nicycler works by specifying the data type to contain all the data for a record and the view type to display the record in. For the following example, we'll define a data class called `Text` with a String field called `message` and use a `TextView` to display the text.
 ```java
@@ -15,7 +23,7 @@ static class Text implements Serializable {
 > Note: this class needs to implement `Serializable` and be in its own file or a static class in order for it to be properly stored when the Activity is paused.
 
 ### View
-Add a `NicyclerView` to your layout file:
+Then, add a `NicyclerView` to your layout file:
 ```xml
 <com.mrbbot.nicycler.NicyclerView
     android:id="@+id/nicycler"
@@ -178,3 +186,15 @@ filterText.addTextChangedListener(new TextWatcher() {
 });
 ```
 The filter only affects the displayed results, and not the actual dataset.
+
+#### Sorting
+In a similar way, we can also sort the dataset. If we wanted to sort the data alphabetically, we can use:
+
+```java
+view.sort(new Comparator<Text>() {
+    @Override
+    public int compare(Text a, Text b) {
+        return a.message.compareTo(b.message);
+    }
+});
+```
