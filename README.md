@@ -5,7 +5,7 @@ Nicycler is a nicer version of Android's `RecyclerView`.
 Add the library as a Gradle dependency to your app-level `build.gradle`.
 ```gradle
 dependencies {
-    compile 'com.mrbbot:nicycler:1.0.1'
+    compile 'com.mrbbot:nicycler:1.0.2'
 }
 ```
 
@@ -126,6 +126,26 @@ protected void onRestoreInstanceState(Bundle savedInstanceState) {
 All of the options for a swipe are stored in a `NicyclerSwipe` object. An icon resource ID and a colour for the swipe needs to be defined:
 ```java
 NicyclerSwipe<Text> completeSwipe = new NicyclerSwipe<Text>(R.drawable.ic_check, "#4CAF50") {
+    @Override
+    public void swipe(Text text, Callback callback) {
+        view.remove(t -> t.equals(text));
+        callback.callback();
+    }
+};
+```
+Instead of providing the resource ID and colour in the constructor, you can also override the methods that return them, allowing for dynamic values:
+```java
+NicyclerSwipe<Text> completeSwipe = new NicyclerSwipe<Text>() {
+    @Override
+    public String getColour(Text text) {
+        return text.message.toLowerCase().contains("e") ? "#F44336" : "#4CAF50";
+    }
+
+    @Override
+    public int getIcon(Text text) {
+        return text.message.toLowerCase().contains("e") ? R.drawable.ic_delete : R.drawable.ic_check;
+    }
+
     @Override
     public void swipe(Text text, Callback callback) {
         view.remove(t -> t.equals(text));

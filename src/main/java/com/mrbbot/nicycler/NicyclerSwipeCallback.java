@@ -10,6 +10,12 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 abstract class NicyclerSwipeCallback extends ItemTouchHelper.SimpleCallback {
+    private Context context;
+    @Nullable
+    private final NicyclerSwipe leftSwipe;
+    @Nullable
+    private final NicyclerSwipe rightSwipe;
+
     private Drawable rightIcon, leftIcon;
     private int rightWidth, rightHeight,
             leftWidth, leftHeight;
@@ -22,22 +28,9 @@ abstract class NicyclerSwipeCallback extends ItemTouchHelper.SimpleCallback {
     NicyclerSwipeCallback(Context context, @Nullable NicyclerSwipe leftSwipe, @Nullable NicyclerSwipe rightSwipe) {
         super(0, (leftSwipe != null ? ItemTouchHelper.LEFT : 0) +
                 (rightSwipe != null ? ItemTouchHelper.RIGHT : 0));
-
-        if(leftSwipe != null) {
-            this.leftIcon = leftSwipe.getIcon(context);
-            this.leftWidth = this.leftIcon.getIntrinsicWidth();
-            this.leftHeight = this.leftIcon.getIntrinsicHeight();
-
-            this.leftColour = leftSwipe.getColor();
-        }
-        
-        if(rightSwipe != null) {
-            this.rightIcon = rightSwipe.getIcon(context);
-            this.rightWidth = this.rightIcon.getIntrinsicWidth();
-            this.rightHeight = this.rightIcon.getIntrinsicHeight();
-            
-            this.rightColour = rightSwipe.getColor();
-        }
+        this.context = context;
+        this.leftSwipe = leftSwipe;
+        this.rightSwipe = rightSwipe;
 
         background = new ColorDrawable();
     }
@@ -47,9 +40,28 @@ abstract class NicyclerSwipeCallback extends ItemTouchHelper.SimpleCallback {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         int direction = dX < 0 ? ItemTouchHelper.LEFT : ItemTouchHelper.RIGHT;
+
+        NicyclerRecyclerAdapter.VH vh = (NicyclerRecyclerAdapter.VH) viewHolder;
+
+        if(leftSwipe != null) {
+            this.leftIcon = leftSwipe.doGetIcon(context, vh.d);
+            this.leftWidth = this.leftIcon.getIntrinsicWidth();
+            this.leftHeight = this.leftIcon.getIntrinsicHeight();
+
+            this.leftColour = leftSwipe.doGetColour(vh.d);
+        }
+
+        if(rightSwipe != null) {
+            this.rightIcon = rightSwipe.doGetIcon(context, vh.d);
+            this.rightWidth = this.rightIcon.getIntrinsicWidth();
+            this.rightHeight = this.rightIcon.getIntrinsicHeight();
+
+            this.rightColour = rightSwipe.doGetColour(vh.d);
+        }
 
         View itemView = viewHolder.itemView;
         int itemHeight = itemView.getBottom() - itemView.getTop();

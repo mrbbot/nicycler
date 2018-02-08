@@ -2,12 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-//ext {
-//    PUBLISH_GROUP_ID = 'com.mrbbot'
-//    PUBLISH_ARTIFACT_ID = 'nicycler'
-//    PUBLISH_VERSION = '1.0.1'
-//}
-
 android {
     compileSdkVersion 26
 
@@ -15,7 +9,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 2
-        versionName "1.0.1"
+        versionName "1.0.2"
 
         testInstrumentationRunner "android.support.accept.runner.AndroidJUnitRunner"
 
@@ -62,7 +56,7 @@ artifacts {
 }
 
 group = 'com.mrbbot'
-version = '1.0.1'
+version = '1.0.2'
 
 install {
     repositories.mavenInstaller {
@@ -75,7 +69,7 @@ install {
             packaging 'aar'
             groupId 'com.mrbbot'
             artifactId 'nicycler'
-            version '1.0.1'
+            version '1.0.2'
 
             licenses {
                 license {
@@ -113,10 +107,10 @@ bintray {
         vcsUrl = 'https://github.com/mrbbot/nicycler.git'
         publish = true
         version {
-            name = '1.0.1'
-            desc = 'Nicycler 1.0.1'
+            name = '1.0.2'
+            desc = 'Nicycler 1.0.2'
             released = new Date()
-            vcsTag = 'v1.0.1'
+            vcsTag = 'v1.0.2'
         }
     }
 }
